@@ -6,8 +6,8 @@ const log = debug('IAC');
 export default {
   debug: (msg, ...args) => {
     log(msg, ...args);
-    if(!isEmpty(window.document.getElementById)) {
-      const responseHtml = window.document.getElementById('response');
+    const  responseHtml = window.document.getElementById('response');
+    if (typeof responseHtml !== "undefined" && responseHtml) {
       responseHtml.insertAdjacentHTML('beforeend', `<div>${msg}</div>`);
     }
   }
