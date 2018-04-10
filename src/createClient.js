@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import toUpper from 'lodash/toUpper';
 import log from "./log";
 
-export default function (clientId, actions) {
+export default function (clientId, actions, onEvent) {
   let topics = {};
 
   return {
@@ -12,6 +12,7 @@ export default function (clientId, actions) {
     id: clientId,
     subscribe: (topicName, callback) => {
       const callbackId = moment.now();
+
       if (isEmpty(topics[topicName])) {
         topics[topicName] = {};
       }
@@ -20,7 +21,8 @@ export default function (clientId, actions) {
       const unSubscribe = (callbackId) => () => {
         delete topics[topicName][callbackId];
       };
-      log.debug(`${clientId} subscribe to ${topicName} with callbackId : ${callbackId}`);
+
+      onEvent('subscribe', topicName, clientId);
       return {
         unSubscribe: unSubscribe(callbackId),
       };

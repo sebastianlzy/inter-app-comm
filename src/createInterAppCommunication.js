@@ -1,49 +1,44 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 import forEach from 'lodash/forEach';
+import moment from 'moment';
 import noop from 'lodash/noop';
-import toUpper from 'lodash/toUpper';
 
-import log from './log';
 import createClient from './createClient';
 
-export default function (actions = {}) {
+export default function (actions = {}, onEvent = noop) {
   let clients = {};
-  let checksum = '';
-
-  const setChecksum = (val) => {
-    log.debug(`Set checksum : ${val}`);
-    checksum = val
-  };
-
+  let secretPayload = moment.now();
+  onEvent('secretPayloadGenerated', secretPayload);
   return {
+    verifySecretPayload: (secret) => {
+      onEvent('verifySecretPayload', secret === secretPayload)
+    },
     registerClient: (clientId) => {
       if (get(clients, clientId)) {
         throw new Error('Client has been registered');
       }
 
-      set(clients, clientId, createClient(clientId, {
-        ...actions,
-        setChecksum,
-      }));
-
-      log.debug(`Registered client : ${clientId}`);
+      set(clients, clientId, createClient(clientId, actions, onEvent));
+      onEvent('registerClient', clientId);
       return get(clients, clientId);
     },
     getClients: () => {
-      log.debug(`Get all clients : ${clients.length}`, clients);
+      onEvent('getClients', clients);
       return clients;
     },
     unregisterClient: (client) => {
       const clientId = get(client, 'id');
-      log.debug(`Unregister client : ${clientId}`);
+      onEvent('unregisterClient', clientId);
+
       clientId ? delete clients[clientId] : null;
     },
+    getSecretPayload: () => secretPayload,
     publish: (topicName, ...args) => {
+      onEvent('publish', topicName);
       forEach(clients, (client) => {
         const callbacks = client.getTopic(topicName);
-        log.debug(`Publishing : ${topicName}`);
-        forEach(callbacks, (callback) => callback(...args, checksum));
+        forEach(callbacks, (callback) => callback(...args));
       });
     },
   };
