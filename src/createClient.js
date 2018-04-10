@@ -20,7 +20,7 @@ export default function (clientId, actions) {
       const unSubscribe = (callbackId) => () => {
         delete topics[topicName][callbackId];
       };
-      log.debug(`${clientId} subscribe to ${topicName} with callbackId : `, callbackId);
+      log.debug(`${clientId} subscribe to ${topicName} with callbackId : ${callbackId}`);
       return {
         unSubscribe: unSubscribe(callbackId),
       };

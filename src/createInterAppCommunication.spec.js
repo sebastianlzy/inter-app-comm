@@ -59,20 +59,9 @@ describe('createInterAppCommunication', () => {
     interAppCommunication.publish('I_AM_AN_EVENT_NAME', 'Sending message to event, I_AM_AN_EVENT_NAME');
   });
 
-  it('should allow client to publish event', () => {
-    const mobileIos1 = interAppCommunication.registerClient('mobileIos1');
-    const mobileIos2 = interAppCommunication.registerClient('mobileIos2');
-
-    const payload1 = mobileIos1.actions.publish('i_am_an_event_name', 'sending message to web 1');
-    expect(payload1).toEqual({type: 'INTERAPP_COMMUNICATION_I_AM_AN_EVENT_NAME', payload: 'sending message to web 1'});
-
-    const payload2 = mobileIos2.actions.publish('i_am_an_event_name', 'sending message to web 2');
-    expect(payload2).toEqual({type: 'INTERAPP_COMMUNICATION_I_AM_AN_EVENT_NAME', payload: 'sending message to web 2'});
-  });
-
   it('should take in actions', () => {
-    const actions = () => ({setNotification: (payload) => payload});
-    const newInterAppCommunication = interAppCommunication = createInterAppCommunication(store, actions);
+    const actions = {setNotification: (payload) => payload};
+    const newInterAppCommunication = interAppCommunication = createInterAppCommunication(actions);
     const mobileIos1 = newInterAppCommunication.registerClient('mobileIos1');
 
     const payload1 = mobileIos1.actions.setNotification('success');

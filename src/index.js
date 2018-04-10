@@ -13,11 +13,11 @@ function setInterAppCommunicationToGlobal(interAppCommunication) {
 function initWebClient() {
   const appClients = get(window, 'registerClients', []);
   const interAppCommunication = createInterAppCommunication();
-  log.debug('Created interAppCommunication : ', interAppCommunication);
+  log.debug('interAppCommunication initialized', interAppCommunication);
   setInterAppCommunicationToGlobal(interAppCommunication);
 
   forEach(appClients, function(registerClient) {
-    log.debug('Found App Client : ', registerClient);
+    log.debug(`Found App Clients : ${registerClient.length}`);
     try {
       registerClient(interAppCommunication)
     } catch (e) {

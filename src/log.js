@@ -1,11 +1,14 @@
 import debug from 'debug';
+import isEmpty from 'lodash/isEmpty';
 
 const log = debug('IAC');
 
 export default {
   debug: (msg, ...args) => {
     log(msg, ...args);
-    const responseHtml = document.getElementById('response');
-    responseHtml.insertAdjacentHTML('beforeend', `<div>${msg}</div>`);
+    if(!isEmpty(window.document.getElementById)) {
+      const responseHtml = window.document.getElementById('response');
+      responseHtml.insertAdjacentHTML('beforeend', `<div>${msg}</div>`);
+    }
   }
 }

@@ -7,20 +7,13 @@ import toUpper from 'lodash/toUpper';
 import log from './log';
 import createClient from './createClient';
 
-export default function (store = {dispatch: noop}, actions = () => ({})) {
+export default function (actions = {}) {
   let clients = {};
   let checksum = '';
 
   const setChecksum = (val) => {
-    log.debug('Set checksum : ', val);
+    log.debug(`Set checksum : ${val}`);
     checksum = val
-  };
-
-  const publish = (dispatch) => (eventName, args) => {
-    return dispatch({
-      type: `INTERAPP_COMMUNICATION_${toUpper(eventName)}`,
-      payload: args,
-    })
   };
 
   return {
@@ -28,30 +21,28 @@ export default function (store = {dispatch: noop}, actions = () => ({})) {
       if (get(clients, clientId)) {
         throw new Error('Client has been registered');
       }
-      const listOfActions = actions(store.dispatch);
+
       set(clients, clientId, createClient(clientId, {
-        ...listOfActions,
+        ...actions,
         setChecksum,
-        publish: publish(store.dispatch)
       }));
 
-      log.debug('Register client : ', clientId);
+      log.debug(`Registered client : ${clientId}`);
       return get(clients, clientId);
     },
     getClients: () => {
-      log.debug('Get all clients : ', clients);
+      log.debug(`Get all clients : ${clients.length}`, clients);
       return clients;
     },
     unregisterClient: (client) => {
       const clientId = get(client, 'id');
-      log.debug('Unregister client : ', clientId);
+      log.debug(`Unregister client : ${clientId}`);
       clientId ? delete clients[clientId] : null;
     },
     publish: (topicName, ...args) => {
       forEach(clients, (client) => {
         const callbacks = client.getTopic(topicName);
-        log.debug('Publishing : ', topicName);
-        log.debug('Callback : ', callbacks);
+        log.debug(`Publishing : ${topicName}`);
         forEach(callbacks, (callback) => callback(...args, checksum));
       });
     },
