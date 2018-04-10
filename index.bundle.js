@@ -2568,7 +2568,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var loda
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ \"./node_modules/debug/src/browser.js\");\n/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);\n\n\nconst log = debug__WEBPACK_IMPORTED_MODULE_0___default()('IAC');\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  debug: (msg, ...args) => {\n    log(msg, ...args)\n  }\n});\n\n\n//# sourceURL=webpack:///./src/log.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ \"./node_modules/debug/src/browser.js\");\n/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);\n\n\nconst log = debug__WEBPACK_IMPORTED_MODULE_0___default()('IAC');\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  debug: (msg, ...args) => {\n    log(msg, ...args);\n    const responseHtml = document.getElementById('response');\n    responseHtml.insertAdjacentHTML('beforeend', `<div>${msg}</div>`);\n  }\n});\n\n\n//# sourceURL=webpack:///./src/log.js?");
 
 /***/ })
 
