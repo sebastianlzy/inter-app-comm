@@ -12,7 +12,10 @@ export default function (actions = {}, onEvent = noop) {
   onEvent('secretPayloadGenerated', secretPayload);
   return {
     verifySecretPayload: (secret) => {
-      onEvent('verifySecretPayload', secret === secretPayload)
+      const result = (secret === secretPayload);
+
+      onEvent('verifySecretPayload', result);
+      return result;
     },
     registerClient: (clientId) => {
       if (get(clients, clientId)) {

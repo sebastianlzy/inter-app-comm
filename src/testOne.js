@@ -9,20 +9,23 @@ let interAppCommunication = {};
 
 const nextTestCase = () => {
   const cases = [
-    () => (log.debug('TEST 1 :: Waiting for Web Client to generate secret payload')),
+    () => (log.debug('TEST :: Waiting for Web client to be loaded')),
+    () => (log.debug('TEST :: Waiting for Web client to generate secret payload')),
     () => {
-      log.debug('TEST 2 :: Waiting for App Client to register client');
-      log.example(`client = window.interAppCommunication.registerClient('mobileIos')`)
+      log.debug('TEST :: Waiting for App client to register client');
+      log.example(`testOne.registerClient()`)
     },
     () => {
-      log.debug('TEST 3 :: Waiting for App Client to subscribe to "VERIFY_PAYLOAD"');
-      log.example(`client.subscribe('VERIFY_PAYLOAD', (secretPayload) =>(window.interAppCommunication.verifySecretPayload(secretPayload)))`)
+      log.debug('TEST :: Waiting for App client to subscribe to "VERIFY_PAYLOAD"');
+      log.example(`testOne.subscribe((secretPayload) => (window.interAppCommunication.verifySecretPayload(secretPayload)))`)
     },
     () => {
-      log.debug('TEST 4 :: Waiting for Web Client to publish event "VERIFY_PAYLOAD" with secretPayload');
-      interAppCommunication.publish('VERIFY_PAYLOAD', interAppCommunication.getSecretPayload());
+      setTimeout(() => {
+        log.debug(`TEST :: Waiting for Web client to publish event "VERIFY_PAYLOAD" with secretPayload : ${interAppCommunication.getSecretPayload()}`);
+        interAppCommunication.publish('VERIFY_PAYLOAD', interAppCommunication.getSecretPayload());
+      }, 0)
     },
-    () => log.debug('TEST 5 :: Waiting for Web Client to verify payload'),
+    () => log.debug('TEST :: Waiting for Web client to verify payload'),
     () => log.debug('TEST :: END OF TEST')
   ];
   const testDescription = get(cases, testProgress, noop);
@@ -45,13 +48,18 @@ const handleEventChange = (eventName, ...args) => {
 
   const cases = [
     () => {
+      if (eventName === 'createInterAppCommunication') {
+        handleEvent(`Web client is loaded`);
+      }
+    },
+    () => {
       if (eventName === 'secretPayloadGenerated') {
-        handleEvent('Web client generated secret payload');
+        handleEvent(`Web client generated secret payload : ${args[0]}`);
       }
     },
     () => {
       if (eventName === 'registerClient') {
-        handleEvent('App client is registered with Web Client');
+        handleEvent('App client is registered with Web client');
       }
     },
     () => {
@@ -75,11 +83,16 @@ const handleEventChange = (eventName, ...args) => {
 
 export default function (initWebClient) {
 
-
-  log.debug('================== TEST 1: It should allow 2 way communication ==================');
-
+  let client;
   nextTestCase();
   interAppCommunication = initWebClient(handleEventChange);
 
-
+  window.testOne = {
+    registerClient: () => {
+      client = window.interAppCommunication.registerClient('testOneClient')
+    },
+    subscribe: (callback) => {
+      client.subscribe('VERIFY_PAYLOAD', callback)
+    }
+  }
 }
