@@ -70,13 +70,11 @@ describe('createInterAppCommunication', () => {
 
   it('should ensure checksum is valid', function (done) {
     const mobileIos1 = interAppCommunication.registerClient('mobileIos1');
-    const checksumVal = 'I_AM_A_CHECKSUM';
-    mobileIos1.actions.setChecksum(checksumVal);
-    mobileIos1.subscribe('GET_CHECKSUM', (checksum) => {
-      expect(checksum).toEqual(checksumVal);
+    mobileIos1.subscribe('VERIFY_PAYLOAD', (checksum) => {
+      expect(interAppCommunication.verifySecretPayload(checksum)).toEqual(true);
       done();
     });
-    interAppCommunication.publish('GET_CHECKSUM');
+    interAppCommunication.publish('VERIFY_PAYLOAD', interAppCommunication.getSecretPayload());
   });
 
   it('should allow client to unsubscribe to event', function () {

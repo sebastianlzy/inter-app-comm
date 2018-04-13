@@ -16,7 +16,7 @@ export default {
     printToHtml(`<div style="padding: 5px; color: grey">${msg}</div>`);
   },
   example: (msg) => {
-    printToHtml(`<div style="color: white; padding: 20px; background-color: grey">${msg}</div>`);
+    printToHtml(`<pre style="color: white; padding: 20px; background-color: grey">${msg}</pre>`);
   },
   result: (msg, isTestCasePassing) => {
     const validity = isTestCasePassing ? {msg: "PASS", color: "green"}  : {msg: "FAIL", color: red};
