@@ -34,7 +34,7 @@ const {test} = queryString.parse(window.location.search);
 
 if (test === 'one') {
   log.debug('Objective: Two way communication');
-  log.debug('Assumption: Web client is loaded before App Client');
+  log.debug('Assumption: Web client is loaded before App Client ');
   log.debug('Verification 1 : App client will register itself with Web Client');
   log.debug('Verification 2 : App client will subscribe to event with a callback');
   log.debug('Verification 3 : Web client is able to receive information passed from App Client');
@@ -43,7 +43,7 @@ if (test === 'one') {
 }
 
 if (test === 'two') {
-  log.debug('Objective: Web client to register App client asynchronously');
+  log.debug('Objective: Web client to register App client asynchronously ');
   log.debug('Assumption: App client is loaded before Web Client');
   log.debug('Verification 1 : App client will check if Web Client is loaded');
   log.debug('Verification 2 : App client will set up callback on window.registerClients');
