@@ -31,6 +31,7 @@
   },
   "scripts": {
     "build": "babel src -d lib",
+    "deploy-gh": "git checkout gh-pages; git merge master; yarn start; git commit -am 'new build'; git push origin gh-pages; git checkout master",
     "test": "jest",
     "start": "webpack --config webpack.config.js --mode=development",
     "start:watch": "webpack --config webpack.config.js --mode=development --watch=true"
