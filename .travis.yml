@@ -3,11 +3,3 @@ node_js:
   - "node"
 script:
   - yarn test
-before_deploy:
-  - yarn start
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  on:
-    branch: master
